@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spotify Daylist Exporter — Экспорт в .txt и добавление в Spotify</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2250%22 fill=%22%231db954%22/><path d=%22M25 38c18-5 36-3 50 6M28 52c15-4 30-3 42 5M31 65c12-3 24-2 34 4%22 stroke=%22%23121212%22 stroke-width=%227%22 stroke-linecap=%22round%22 fill=%22none%22/></svg>">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <svg class="spotify-icon" viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+          <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.498 17.307c-.216.353-.674.465-1.026.25-2.812-1.718-6.35-2.106-10.521-1.152-.404.093-.807-.16-.899-.564-.093-.404.16-.807.564-.899 4.566-1.043 8.487-.604 11.632 1.339.352.216.464.674.25 1.026zm1.468-3.262c-.272.443-.852.585-1.295.313-3.218-1.979-8.125-2.55-11.932-1.393-.497.151-1.025-.133-1.176-.63-.151-.497.133-1.025.63-1.176 4.356-1.321 9.775-.683 13.46 1.591.443.272.585.852.313 1.295zm.126-3.398C15.242 8.36 8.892 8.15 5.176 9.28c-.592.18-1.22-.164-1.4-.756-.18-.592.164-1.22.756-1.4 4.269-1.296 11.285-1.054 15.748 1.596.533.316.708 1.01.392 1.543-.316.533-1.01.708-1.543.392z"/>
+        </svg>
+        <div>
+          <h1>Spotify Daylist Exporter</h1>
+          <p class="subtitle">Сохрани свой исчезающий Daylist в .txt и добавь в Spotify за 1 клик</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="helpBtn" class="btn-ghost" title="Как это работает?">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          Инструкция
+        </button>
+        <a href="https://github.com/SLAWASTR/spotify-daylist-exporter" target="_blank" rel="noopener" class="btn-ghost" title="Репозиторий на GitHub">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="export-tab">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        Экспорт по ссылке
+      </button>
+      <button class="nav-tab" data-tab="import-tab">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        Импорт / Добавить из .txt
+      </button>
+    </nav>
+
+    <!-- Tab 1: Export by Link -->
+    <main id="export-tab" class="tab-content active">
+      <section class="card input-card">
+        <label for="spotifyUrl" class="input-label">Ссылка на Daylist или плейлист Spotify:</label>
+        <div class="input-group">
+          <div class="input-wrapper">
+            <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+            <input type="text" id="spotifyUrl" placeholder="https://open.spotify.com/playlist/37i9dQZF1FbEn59rE9ZAPD?si=..." autocomplete="off" spellcheck="false">
+            <button id="clearBtn" class="clear-input-btn hidden" title="Очистить">&times;</button>
+          </div>
+          <button id="fetchBtn" class="btn btn-primary">
+            <span class="btn-text">Получить треки</span>
+            <span class="btn-spinner hidden"></span>
+          </button>
+        </div>
+        <div class="input-quick-actions">
+          <span class="quick-hint">Быстрый тест:</span>
+          <button id="sampleDaylistBtn" class="pill-btn">
+            🎧 Вставить пример Daylist
+          </button>
+          <button id="pasteClipboardBtn" class="pill-btn">
+            📋 Вставить из буфера
+          </button>
+        </div>
+      </section>
+
+      <!-- Status / Alerts -->
+      <div id="alertBox" class="alert hidden"></div>
+
+      <!-- Playlist Details Card (shown after loading) -->
+      <section id="resultCard" class="card result-card hidden">
+        <div class="playlist-header">
+          <div class="playlist-cover-wrapper">
+            <img id="playlistCover" src="" alt="Обложка" class="playlist-cover">
+            <span id="playlistTypeBadge" class="playlist-badge">DAYLIST</span>
+          </div>
+          <div class="playlist-meta">
+            <div class="playlist-type" id="playlistType">Персональный плейлист</div>
+            <h2 id="playlistTitle" class="playlist-title">Название Daylist</h2>
+            <p id="playlistDescription" class="playlist-description"></p>
+            <div class="playlist-stats">
+              <span id="trackCount" class="stat-item">0 треков</span>
+              <span class="stat-dot">•</span>
+              <span id="totalDuration" class="stat-item">~0 мин</span>
+              <span class="stat-dot">•</span>
+              <a id="openInSpotifyBtn" href="#" target="_blank" rel="noopener" class="stat-link">
+                Открыть в Spotify ↗
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Export Actions Bar -->
+        <div class="actions-toolbar">
+          <div class="actions-primary">
+            <button id="copyForSpotifyBtn" class="btn btn-accent btn-large" title="Скопировать треки для быстрой вставки в Spotify через Cmd+V / Ctrl+V">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Скопировать для Spotify (Cmd+V)</span>
+            </button>
+            <button id="downloadTxtBtn" class="btn btn-secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Скачать .txt</span>
+            </button>
+            <button id="copyTxtBtn" class="btn btn-secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+              <span>Копировать список</span>
+            </button>
+          </div>
+
+          <div class="actions-options">
+            <div class="select-wrapper">
+              <label for="formatSelect" class="select-label">Формат .txt:</label>
+              <select id="formatSelect" class="custom-select">
+                <option value="artist-title">Артист — Трек</option>
+                <option value="numbered">1. Артист — Трек</option>
+                <option value="uri">Spotify URIs (spotify:track:...)</option>
+                <option value="url">Spotify Ссылки (open.spotify.com/...)</option>
+                <option value="full">Подробный (с длительностью)</option>
+              </select>
+            </div>
+            <button id="previewTxtToggle" class="btn-ghost-small">
+              <span>Превью .txt</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsible TXT Preview Box -->
+        <div id="txtPreviewContainer" class="txt-preview-container hidden">
+          <div class="txt-preview-header">
+            <span>Предпросмотр файла .txt:</span>
+            <button id="copyPreviewBtn" class="btn-copy-mini">Скопировать всё</button>
+          </div>
+          <textarea id="txtPreviewArea" readonly rows="8" class="txt-preview-area"></textarea>
+        </div>
+
+        <!-- Tracklist controls -->
+        <div class="tracklist-controls">
+          <div class="search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="trackSearch" placeholder="Поиск по названию или исполнителю...">
+          </div>
+          <div class="selection-stats">
+            <span id="selectedCountText">Выбрано: 50 / 50</span>
+            <button id="toggleSelectAllBtn" class="btn-link">Снять всё</button>
+          </div>
+        </div>
+
+        <!-- Tracks Table -->
+        <div class="tracks-table-container">
+          <table class="tracks-table">
+            <thead>
+              <tr>
+                <th width="40"><input type="checkbox" id="selectAllCheckbox" checked></th>
+                <th width="40">#</th>
+                <th width="44"></th>
+                <th>Трек</th>
+                <th>Исполнитель</th>
+                <th width="80" class="text-right">Длительность</th>
+                <th width="50"></th>
+              </tr>
+            </thead>
+            <tbody id="tracksTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- Tab 2: Import / Add from TXT -->
+    <section id="import-tab" class="tab-content">
+      <div class="card import-card">
+        <div class="import-header">
+          <h2>Добавить треки из существующего .txt</h2>
+          <p class="subtitle">Вставь сохраненный ранее список или перетащи .txt файл. Приложение преобразует его в формат для быстрой вставки в Spotify!</p>
+        </div>
+
+        <div class="drag-drop-zone" id="dropZone">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          <p><strong>Перетащи сюда .txt файл</strong> или выбери на устройстве</p>
+          <input type="file" id="fileInput" accept=".txt,.csv" class="hidden">
+          <button type="button" class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">Выбрать файл</button>
+        </div>
+
+        <div class="or-divider"><span>ИЛИ ВСТАВЬ ТЕКСТ</span></div>
+
+        <div class="textarea-wrapper">
+          <textarea id="importTextarea" rows="8" placeholder="Вставь сюда строки из .txt файла, например:
+Soundgarden - Fell On Black Days
+Alice In Chains - Rooster
+spotify:track:0jmKzJmUEKNbC7eU8YfOiA
+https://open.spotify.com/track/6AioOohg4bQZFA4jIYQQ2r"></textarea>
+        </div>
+
+        <div class="import-actions">
+          <button id="parseImportBtn" class="btn btn-primary">
+            <span>Распознать и подготовить</span>
+          </button>
+          <button id="clearImportBtn" class="btn btn-ghost">Очистить</button>
+        </div>
+
+        <!-- Import Results -->
+        <div id="importResults" class="import-results hidden">
+          <div class="import-success-bar">
+            <div>
+              <strong id="importTracksCount">0</strong> треков распознано!
+            </div>
+            <div class="import-buttons">
+              <button id="copyImportedForSpotifyBtn" class="btn btn-accent">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span>Скопировать для Spotify (Cmd+V)</span>
+              </button>
+              <button id="copyImportedListBtn" class="btn btn-secondary">
+                <span>Скопировать текст</span>
+              </button>
+            </div>
+          </div>
+          <div class="imported-preview-list" id="importedPreviewList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mini Audio Player (Floating) -->
+    <div id="miniPlayer" class="mini-player hidden">
+      <div class="mini-player-info">
+        <div class="mini-player-cover" id="miniPlayerCover"></div>
+        <div class="mini-player-text">
+          <div class="mini-player-title" id="miniPlayerTitle">Название трека</div>
+          <div class="mini-player-artist" id="miniPlayerArtist">Исполнитель</div>
+        </div>
+      </div>
+      <div class="mini-player-controls">
+        <button id="miniPlayerPlayBtn" class="player-btn-circle" title="Пауза / Играть">
+          <svg id="miniPlayerPlayIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        </button>
+        <span class="preview-badge">30с демо</span>
+        <button id="miniPlayerCloseBtn" class="btn-close-player" title="Закрыть">&times;</button>
+      </div>
+      <audio id="globalAudioPlayer"></audio>
+    </div>
+
+    <!-- Help / Instruction Modal -->
+    <div id="helpModal" class="modal-overlay hidden">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Как сохранить и добавить треки в Spotify</h3>
+          <button id="closeModalBtn" class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="step-guide">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-text">
+                <strong>Экспорт Daylist</strong>
+                <p>Вставьте ссылку на Daylist из Spotify (в приложении: «Поделиться» → «Скопировать ссылку») и нажмите «Получить треки».</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-text">
+                <strong>Сохранение в .txt</strong>
+                <p>Нажмите «Скачать .txt», чтобы навсегда сохранить список композиций текущего Daylist (ведь в Spotify он меняется каждые несколько часов!).</p>
+              </div>
+            </div>
+            <div class="step-item highlight-step">
+              <div class="step-num">3</div>
+              <div class="step-text">
+                <strong>🔥 Добавление в Spotify в 1 клик (Cmd+V / Ctrl+V):</strong>
+                <ol>
+                  <li>Нажмите зелёную кнопку <b>«Скопировать для Spotify»</b>.</li>
+                  <li>Откройте приложение Spotify на компьютере (Mac или Windows).</li>
+                  <li>Создайте новый плейлист (или откройте существующий).</li>
+                  <li>Нажмите <b>Cmd + V</b> (на Mac) или <b>Ctrl + V</b> (на Windows).</li>
+                  <li>Все треки моментально появятся в вашем плейлисте! 🎉</li>
+                </ol>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">4</div>
+              <div class="step-text">
+                <strong>Восстановление из файла в будущем</strong>
+                <p>Если у вас уже есть файл .txt, откройте вкладку «Импорт из .txt», загрузите файл и нажмите ту же кнопку копирования!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="modalGotItBtn" class="btn btn-primary">Понятно, спасибо!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Spotify Daylist Exporter • Открытый исходный код на <a href="https://github.com/SLAWASTR/spotify-daylist-exporter" target="_blank" rel="noopener">GitHub</a> • Создано для сохранения ваших любимых дейлистов</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
